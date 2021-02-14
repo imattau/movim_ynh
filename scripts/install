@@ -169,8 +169,8 @@ mkdir -p $cache_dir
 chown -R $app $cache_dir
 
 pushd $final_path
-	ynh_exec_as $app php$phpversion composer.phar $app:migrate --quiet
-	ynh_exec_as $app php$phpversion daemon.php config --username=$admin --password=$password --quiet
+	php$phpversion composer.phar $app:migrate --quiet
+	php$phpversion daemon.php config --username=$admin --password=$password --quiet
 popd
 
 #=================================================
@@ -179,8 +179,10 @@ popd
 # SET PERMISSIONS
 #=================================================
 
-chown -R $app:www-data $final_path
-chown -R $app $final_path/src/Movim/
+chown -R $app: $final_path
+chown -R $app: $final_path/public
+chown -R $app: $final_path/src/Movim/
+chmod u+rwx $final_path
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
@@ -200,12 +202,12 @@ ynh_systemd_action --service_name=$app --action=start --log_path="systemd" #--li
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring SSOwat..." --weight=1
+ynh_script_progression --message="Configuring permissions..." --weight=1
 
 # Make app public if necessary or protect it
 if [ $is_public -eq 1 ]
 then
-	ynh_permission_update --permission "main" --add "visitors"
+	ynh_permission_update --permission="main" --add="visitors"
 fi
 
 #=================================================
