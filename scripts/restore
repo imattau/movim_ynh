@@ -73,8 +73,10 @@ ynh_system_user_create --username=$app
 #=================================================
 
 # Restore permissions on app files
-chown -R $app:www-data $final_path
-chown -R $app $final_path/src/Movim/
+chown -R $app: $final_path
+chown -R $app: $final_path/public
+chown -R $app: $final_path/src/Movim/
+chmod u+rwx $final_path
 
 #=================================================
 # RESTORE THE PHP-FPM CONFIGURATION

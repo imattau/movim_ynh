@@ -138,8 +138,10 @@ ynh_add_fpm_config --package="$extra_php_dependencies"
 # SET PERMISSIONS
 #=================================================
 
-chown -R $app:www-data $final_path
-chown -R $app $final_path/src/Movim/Bootstrap.php
+chown -R $app: $final_path
+chown -R $app: $final_path/public
+chown -R $app: $final_path/src/Movim/
+chmod u+rwx $final_path
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
@@ -164,7 +166,7 @@ popd
 ynh_script_progression --message="Configuring database.." --weight=1
 
 pushd $final_path
-	ynh_exec_as $app php$phpversion composer.phar movim:migrate --quiet
+	php$phpversion composer.phar movim:migrate --quiet
 popd
 
 #=================================================
